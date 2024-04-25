@@ -9,7 +9,6 @@ module.exports = class StockPriceService {
     }
 
     static async fetchStock(stockSymbol) {
-        // TODO : write the fetch 
         const stockFetchUrl = this._generateUrlForStock(stockSymbol);
         try {
             const response = await axios.get(stockFetchUrl);
