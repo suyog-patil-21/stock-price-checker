@@ -1,18 +1,18 @@
 'use strict';
 const StockPriceService = require('../service/stock_detail_service');
 const responseBody = require('../utils/response-body');
+const UserLikeInfoDAO = require('../data/user-like-info.data')
+
 module.exports = function (app) {
 
   app.route('/api/stock-prices')
     .get(async function (req, res) {
       const stock = req.query.stock;
-      let like;
-      if (req.query.like === undefined) {
-        like = false;
-      }
+      let like = req.query.like || false;
       const userIpAddress = req.ip;
       const isStockArrayReq = Array.isArray(stock);
       console.log(`REQUESTINFO\nip= ${userIpAddress},\nStock= ${stock},\nlike= ${like}`);
+      const _userLikeInfoDAO = new UserLikeInfoDAO();
       if (isStockArrayReq) {
         // TODO : for multuple stock
         const stock1Result = await StockPriceService.fetchStock(stock[0]);
@@ -26,7 +26,14 @@ module.exports = function (app) {
       // TODO : for single stock
       const stockResult = await StockPriceService.fetchStock(stock);
       console.log(stockResult);
-      res.send(responseBody({ "stock": stockResult.symbol, "price": stockResult.latestPrice, "likes": "1" }));
+      // const userlikes = await _userLikeInfoDAO.getUserLikeInfoDataBySymbolAndHash(stock,userIpAddress);
+      // console.log(`user likes from DB = ${userlikes}`);
+      if(like){
+        console.log("inside the logic code");
+        const createUserLikeInfo = await _userLikeInfoDAO.createUserLikeInfo("tsla",userIpAddress);
+        console.log(createUserLikeInfo);
+      }
+      res.send(responseBody({ "stock": stockResult.symbol, "price": stockResult.latestPrice, "likes": "userlikes" }));
     });
 
 };
