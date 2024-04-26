@@ -1,39 +1,45 @@
 'use strict';
-const StockPriceService = require('../service/stock_detail_service');
+const StockPriceService = require('../service/stock-detail.service');
 const responseBody = require('../utils/response-body');
-const UserLikeInfoDAO = require('../data/user-like-info.data')
+const UserLikeInfoService = require('../service/user-like-info.service')
 
 module.exports = function (app) {
 
   app.route('/api/stock-prices')
     .get(async function (req, res) {
       const stock = req.query.stock;
-      let like = req.query.like || false;
+      let like = (req.query.like === 'true') ? true : false;
       const userIpAddress = req.ip;
       const isStockArrayReq = Array.isArray(stock);
-      console.log(`REQUESTINFO\nip= ${userIpAddress},\nStock= ${stock},\nlike= ${like}`);
-      const _userLikeInfoDAO = new UserLikeInfoDAO();
+
+      console.log(`REQUESTINFO\nip= ${userIpAddress},\nStock= ${stock},\nlike= ${like}(typeof:${typeof like})`);
+
+      const _userLikeInfoService = new UserLikeInfoService();
+
       if (isStockArrayReq) {
-        // TODO : for multuple stock
+        // For multuple stock query
         const stock1Result = await StockPriceService.fetchStock(stock[0]);
         const stock2Result = await StockPriceService.fetchStock(stock[1]);
-        console.log(stock1Result);
-        console.log(stock2Result);
-        const responseData = [{ "stock": stock1Result.symbol, "price": stock1Result.latestPrice, "rel_likes": "1" },
-        { "stock": stock2Result.symbol, "price": stock2Result.latestPrice, "rel_likes": "1" }];
-        res.send(responseBody(responseData));
+        if (like) {
+          await _userLikeInfoService.createUserLikeInfo(stock[0], userIpAddress);
+          await _userLikeInfoService.createUserLikeInfo(stock[1], userIpAddress);
+        }
+        const stock1likes = await _userLikeInfoService.getStockLikeCount(stock[0]);
+        const stock2likes = await _userLikeInfoService.getStockLikeCount(stock[1]);
+        const responseData = [
+          { stock: stock1Result.symbol, price: stock1Result.latestPrice, rel_likes: (stock1likes - stock2likes) },
+          { stock: stock2Result.symbol, price: stock2Result.latestPrice, rel_likes: (stock2likes - stock1likes) }
+        ];
+        return res.send(responseBody(responseData));
       }
-      // TODO : for single stock
+
+      // For single stock query
       const stockResult = await StockPriceService.fetchStock(stock);
-      console.log(stockResult);
-      // const userlikes = await _userLikeInfoDAO.getUserLikeInfoDataBySymbolAndHash(stock,userIpAddress);
-      // console.log(`user likes from DB = ${userlikes}`);
-      if(like){
-        console.log("inside the logic code");
-        const createUserLikeInfo = await _userLikeInfoDAO.createUserLikeInfo(symbol,userIpAddress);
-        console.log(createUserLikeInfo);
+      if (like) {
+        await _userLikeInfoService.createUserLikeInfo(stock, userIpAddress);
       }
-      res.send(responseBody({ "stock": stockResult.symbol, "price": stockResult.latestPrice, "likes": "userlikes" }));
+      const userlikes = await _userLikeInfoService.getStockLikeCount(stock);
+      return res.send(responseBody({ stock: stockResult.symbol, price: stockResult.latestPrice, likes: userlikes }));
     });
 
 };

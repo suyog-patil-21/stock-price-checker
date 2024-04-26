@@ -3,10 +3,11 @@ const userLikeInfoSchema = new mongoose.Schema({
     symbol:{
         type: String,
         required: true,
+        uppercase:true
     },
     ipAddress:{
-        required:true,
         type:String,
+        required:true
     },
 });
 

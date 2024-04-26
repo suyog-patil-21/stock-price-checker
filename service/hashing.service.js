@@ -1,4 +1,6 @@
 module.exports = class HashingService{
 
-    // TODO : write hashing logic
+   async getHash(data){
+
+   }
 }

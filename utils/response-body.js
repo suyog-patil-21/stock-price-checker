@@ -1,3 +1,3 @@
 module.exports = function responseBody(data) {
-        return {"stockData":data};
+        return {stockData:data};
 }
