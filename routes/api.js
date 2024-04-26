@@ -30,7 +30,7 @@ module.exports = function (app) {
       // console.log(`user likes from DB = ${userlikes}`);
       if(like){
         console.log("inside the logic code");
-        const createUserLikeInfo = await _userLikeInfoDAO.createUserLikeInfo("tsla",userIpAddress);
+        const createUserLikeInfo = await _userLikeInfoDAO.createUserLikeInfo(symbol,userIpAddress);
         console.log(createUserLikeInfo);
       }
       res.send(responseBody({ "stock": stockResult.symbol, "price": stockResult.latestPrice, "likes": "userlikes" }));
