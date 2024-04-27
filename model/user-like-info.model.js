@@ -7,7 +7,8 @@ const userLikeInfoSchema = new mongoose.Schema({
     },
     ipAddress:{
         type:String,
-        required:true
+        required:true,
+        unique:true
     },
 });
 

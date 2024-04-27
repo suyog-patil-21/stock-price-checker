@@ -12,8 +12,6 @@ module.exports = function (app) {
       const userIpAddress = req.ip;
       const isStockArrayReq = Array.isArray(stock);
 
-      console.log(`REQUESTINFO\nip= ${userIpAddress},\nStock= ${stock},\nlike= ${like}(typeof:${typeof like})`);
-
       const _userLikeInfoService = new UserLikeInfoService();
 
       if (isStockArrayReq) {
