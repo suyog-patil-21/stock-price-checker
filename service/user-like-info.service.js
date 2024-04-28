@@ -8,7 +8,6 @@ module.exports = class UserLikeInfoService {
 
     async createUserLikeInfo(symbol, ipAddress) {
         try {
-            // FIXME: logic of the hash is wrong 
             const ipHash = await HashingService.getHash(ipAddress);
             const result = await this._userLikeInfoDAO.getUserLikeInfoDataBySymbolAndHash(symbol, ipHash);
             if (result === null) {
@@ -24,6 +23,14 @@ module.exports = class UserLikeInfoService {
             return await this._userLikeInfoDAO.getUserLikeInfoCountByStockSymbol(symbol);
         } catch (err) {
             console.log(`Error in UserLikeInfoService getStockLikeCount(): \n${err}`)
+        }
+    }
+
+    async deleteUserLikeInfoByIpHash(ipHash) {
+        try {
+            await this._userLikeInfoDAO.deleteUserLikeInfoByIpHash(ipHash);
+        } catch (err) {
+            console.log(`Error in UserLikeInfoService deleteUserLikeInfoByIpHash(): \n${err}`);
         }
     }
 }

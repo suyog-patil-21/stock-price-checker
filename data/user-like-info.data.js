@@ -30,4 +30,12 @@ module.exports = class UserLikeInfoDAO {
             console.log(`Error in UserLikeInfoDAO createUserLikeInfo(): \n${err}`);
         }
     }
+
+    async deleteUserLikeInfoByIpHash(ipHash) {
+        try {
+            return await UserLikeInfoModel.deleteOne({ ipAddress: ipHash });
+        } catch (err) {
+            console.log(`Error in UserLikeInfoDAO deleteUserLikeInfoByIpHash(): \n${err}`);
+        }
+    }
 }
