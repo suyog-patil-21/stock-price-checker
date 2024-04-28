@@ -31,11 +31,19 @@ module.exports = class UserLikeInfoDAO {
         }
     }
 
-    async deleteUserLikeInfoByIpHash(ipHash) {
+    async deleteAllUserLikeInfoByIpHash(ipHash) {
         try {
-            return await UserLikeInfoModel.deleteOne({ ipAddress: ipHash });
+            return await UserLikeInfoModel.deleteMany({ ipAddress: ipHash });
         } catch (err) {
-            console.log(`Error in UserLikeInfoDAO deleteUserLikeInfoByIpHash(): \n${err}`);
+            console.log(`Error in UserLikeInfoDAO deleteAllUserLikeInfoByIpHash(): \n${err}`);
+        }
+    }
+
+    async deleteUserLikeInfoBySymbolAndIpHash(symbol, ipHash) {
+        try {
+            return await UserLikeInfoModel.deleteOne({ symbol, ipAddress: ipHash });
+        } catch (err) {
+            console.log(`Error in UserLikeInfoDAO deleteUserLikeInfoBySymbolAndIpHash(): \n${err}`);
         }
     }
 }

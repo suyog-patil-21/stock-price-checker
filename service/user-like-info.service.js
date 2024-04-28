@@ -26,11 +26,19 @@ module.exports = class UserLikeInfoService {
         }
     }
 
-    async deleteUserLikeInfoByIpHash(ipHash) {
+    async deleteUserLikeInfoBySymbolAndIpHash(symbol,ipHash) {
         try {
-            await this._userLikeInfoDAO.deleteUserLikeInfoByIpHash(ipHash);
+            await this._userLikeInfoDAO.deleteUserLikeInfoBySymbolAndIpHash(symbol,ipHash);
         } catch (err) {
-            console.log(`Error in UserLikeInfoService deleteUserLikeInfoByIpHash(): \n${err}`);
+            console.log(`Error in UserLikeInfoService deleteUserLikeInfoBySymbolAndIpHash(): \n${err}`);
+        }
+    }
+
+    async deleteAllUserLikeInfoByIpHash(ipHash) {
+        try {
+            await this._userLikeInfoDAO.deleteAllUserLikeInfoByIpHash(ipHash);
+        } catch (err) {
+            console.log(`Error in UserLikeInfoService deleteAllUserLikeInfoByIpHash(): \n${err}`);
         }
     }
 }
