@@ -39,6 +39,14 @@ module.exports = class UserLikeInfoDAO {
         }
     }
 
+    async deleteAllUserLikeInfoCollection(ipHash) {
+        try {
+            return await UserLikeInfoModel.deleteMany({});
+        } catch (err) {
+            console.log(`Error in UserLikeInfoDAO deleteAllUserLikeInfoCollection(): \n${err}`);
+        }
+    }
+
     async deleteUserLikeInfoBySymbolAndIpHash(symbol, ipHash) {
         try {
             return await UserLikeInfoModel.deleteOne({ symbol, ipAddress: ipHash });

@@ -41,4 +41,12 @@ module.exports = class UserLikeInfoService {
             console.log(`Error in UserLikeInfoService deleteAllUserLikeInfoByIpHash(): \n${err}`);
         }
     }
+
+    async deleteAllUserLikeInfoCollection(ipHash) {
+        try {
+            await this._userLikeInfoDAO.deleteAllUserLikeInfoCollection();
+        } catch (err) {
+            console.log(`Error in UserLikeInfoService deleteAllUserLikeInfoCollection(): \n${err}`);
+        }
+    }
 }
